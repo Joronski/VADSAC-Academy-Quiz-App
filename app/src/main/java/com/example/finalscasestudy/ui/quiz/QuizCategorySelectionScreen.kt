@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.finalscasestudy.ui.commons.CategoryCard
-import com.example.finalscasestudy.ui.nav.NavRoutes
+import com.example.finalscasestudy.ui.theme.Blue40
 import com.example.finalscasestudy.ui.viewmodel.QuizViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,29 +29,45 @@ fun QuizCategorySelectionScreen(
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TopAppBar(
-                    title = { Text("QuizIT", fontSize = 25.sp, fontWeight = FontWeight.SemiBold) }
+                    title = {
+                        Text(
+                            "VADSAC Academy's QuizIT",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 )
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    thickness = 5.dp
+                    thickness = 5.dp,
+                    color = Blue40
                 )
             }
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Select Quiz Category",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = 10.dp)
+                color = Blue40,
+                modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 20.dp, bottom = 10.dp)
             )
 
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 10.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -59,7 +75,6 @@ fun QuizCategorySelectionScreen(
                     CategoryCard(
                         categoryName = category,
                         onClick = {
-                            // Load quizzes of this category (optional)
                             quizViewModel.resetQuiz()
                             navController.navigate("select_quiz_difficulty/$category")
                         }

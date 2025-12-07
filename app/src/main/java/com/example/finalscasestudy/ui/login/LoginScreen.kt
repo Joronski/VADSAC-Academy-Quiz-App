@@ -2,7 +2,9 @@ package com.example.finalscasestudy.ui.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.finalscasestudy.ui.commons.ErrorDialog
 import com.example.finalscasestudy.ui.nav.NavRoutes
+import com.example.finalscasestudy.ui.theme.Blue40
 import com.example.finalscasestudy.ui.viewmodel.UserViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -46,62 +49,117 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),topBar = {
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TopAppBar(
-                    title = { Text("QuizIT", fontSize = 25.sp, fontWeight = FontWeight.SemiBold) }
+                    title = {
+                        Text(
+                            "VADSAC Academy's QuizIT",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 )
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    thickness = 5.dp
+                    thickness = 5.dp,
+                    color = Blue40
                 )
             }
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Card(
-                modifier = Modifier.padding(20.dp).fillMaxWidth().fillMaxHeight(0.5f),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 shape = RoundedCornerShape(15.dp),
-                elevation = CardDefaults.cardElevation(5.dp)
+                elevation = CardDefaults.cardElevation(5.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Text("Log In", fontSize = 25.sp, fontWeight = FontWeight.SemiBold)
-
-                    TextField(
-                        modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Email") }
+                    Text(
+                        "Log In",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Blue40
                     )
 
-                    TextField(
-                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Email") },
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Blue40,
+                            focusedLabelColor = Blue40
+                        )
+                    )
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
                         value = password,
                         onValueChange = { password = it },
                         label = { Text("Password") },
-                        visualTransformation = PasswordVisualTransformation()
+                        visualTransformation = PasswordVisualTransformation(),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Blue40,
+                            focusedLabelColor = Blue40
+                        )
                     )
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     Button(
-                        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                        onClick = { userViewModel.login(email.trim(), password) }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .padding(vertical = 4.dp),
+                        onClick = { userViewModel.login(email.trim(), password) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Blue40
+                        )
                     ) {
-                        Text("Log In")
+                        Text("Log In", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
                         text = "No account? Sign Up Here",
                         textDecoration = TextDecoration.Underline,
+                        color = Blue40,
                         modifier = Modifier.clickable {
                             navController.navigate(NavRoutes.REGISTER)
                         }
@@ -116,7 +174,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
             message = errorMessage,
             onDismiss = {
                 showErrorDialog = false
-                userViewModel.resetErrors() // <- Reset the flow value
+                userViewModel.resetErrors()
             }
         )
     }

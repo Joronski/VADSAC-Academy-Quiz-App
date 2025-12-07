@@ -8,9 +8,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.finalscasestudy.ui.theme.Blue40
 import com.example.finalscasestudy.ui.viewmodel.QuizViewModel
 import com.example.finalscasestudy.ui.viewmodel.UserViewModel
 
@@ -35,8 +37,24 @@ fun QuizRecordsScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                TopAppBar(title = { Text("QuizIT", fontSize = 25.sp) })
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp), thickness = 5.dp)
+                TopAppBar(
+                    title = {
+                        Text(
+                            "VADSAC Academy's QuizIT",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    thickness = 5.dp,
+                    color = Blue40
+                )
             }
         }
     ) { innerPadding ->
@@ -50,81 +68,131 @@ fun QuizRecordsScreen(
             Text(
                 text = "Quiz Score History:",
                 fontSize = 25.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Blue40,
                 modifier = Modifier.padding(15.dp)
             )
 
             if (attempts.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No quiz records yet", fontSize = 18.sp)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "No quiz records yet",
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(attempts) { attempt ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 10.dp)
-                                .height(150.dp),
+                                .padding(horizontal = 16.dp)
+                                .wrapContentHeight(),
                             shape = RoundedCornerShape(15.dp),
-                            elevation = CardDefaults.cardElevation(5.dp)
+                            elevation = CardDefaults.cardElevation(5.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            )
                         ) {
                             Row(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column(
                                     modifier = Modifier
-                                        .fillMaxHeight()
-                                        .fillMaxWidth(0.7f)
-                                        .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
-                                    verticalArrangement = Arrangement.SpaceBetween
+                                        .weight(1f)
+                                        .padding(end = 16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
                                 ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Button(onClick = {
-                                            // Retake quiz using current user email
-                                            currentUser?.email?.let { email ->
-                                                quizViewModel.loadQuiz(attempt.category, attempt.difficulty, email)
-                                            }
-                                            navController.navigate("quiz_answering")
-                                        }) {
-                                            Text("Retake")
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        Button(
+                                            onClick = {
+                                                // Retake quiz using current user email
+                                                currentUser?.email?.let { email ->
+                                                    quizViewModel.loadQuiz(attempt.category, attempt.difficulty, email)
+                                                }
+                                                navController.navigate("quiz_answering")
+                                            },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Blue40
+                                            )
+                                        ) {
+                                            Text("Retake", fontWeight = FontWeight.SemiBold)
                                         }
 
                                         Text(
                                             text = attempt.category,
-                                            fontSize = 23.sp,
-                                            modifier = Modifier.padding(start = 10.dp)
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
 
-                                    Divider(
-                                        modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                                        thickness = 2.dp
+                                    HorizontalDivider(
+                                        thickness = 2.dp,
+                                        color = Blue40
                                     )
 
-                                    Row {
-                                        Text("Difficulty:", fontSize = 15.sp)
-                                        Text(attempt.difficulty, fontSize = 15.sp, modifier = Modifier.padding(start = 5.dp))
+                                    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                                        Text(
+                                            "Difficulty:",
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Text(
+                                            attempt.difficulty,
+                                            fontSize = 15.sp,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
                                     }
                                 }
 
-                                Divider(
-                                    modifier = Modifier.fillMaxHeight().width(2.dp)
+                                VerticalDivider(
+                                    modifier = Modifier.height(100.dp),
+                                    thickness = 2.dp,
+                                    color = Blue40
                                 )
 
                                 Column(
-                                    modifier = Modifier.fillMaxHeight(),
+                                    modifier = Modifier.padding(start = 16.dp),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Text("${attempt.score}", fontSize = 30.sp)
-                                    Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 5.dp), thickness = 2.dp)
-                                    Text("${attempt.totalQuestions}", fontSize = 30.sp)
+                                    Text(
+                                        "${attempt.score}",
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Blue40
+                                    )
+                                    HorizontalDivider(
+                                        modifier = Modifier
+                                            .width(50.dp)
+                                            .padding(vertical = 5.dp),
+                                        thickness = 2.dp,
+                                        color = Blue40
+                                    )
+                                    Text(
+                                        "${attempt.totalQuestions}",
+                                        fontSize = 30.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
                                 }
                             }
                         }

@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import com.example.finalscasestudy.ui.commons.ErrorDialog
 import com.example.finalscasestudy.ui.commons.QuizCard
 import com.example.finalscasestudy.ui.nav.NavRoutes
+import com.example.finalscasestudy.ui.theme.Blue40
 import com.example.finalscasestudy.ui.viewmodel.QuizViewModel
 import com.example.finalscasestudy.ui.viewmodel.UserViewModel
 
@@ -40,11 +41,22 @@ fun QuizDifficultySelectionScreen(
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TopAppBar(
-                    title = { Text("QuizIT", fontSize = 25.sp, fontWeight = FontWeight.SemiBold) }
+                    title = {
+                        Text(
+                            "VADSAC Academy's QuizIT",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 )
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    thickness = 5.dp
+                    thickness = 5.dp,
+                    color = Blue40
                 )
             }
         }
@@ -60,7 +72,8 @@ fun QuizDifficultySelectionScreen(
                 modifier = Modifier.padding(top = 25.dp, bottom = 20.dp),
                 text = "Select Quiz",
                 fontSize = 30.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = Blue40
             )
 
             LazyColumn(

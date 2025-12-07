@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.finalscasestudy.ui.commons.ErrorDialog
 import com.example.finalscasestudy.ui.nav.NavRoutes
+import com.example.finalscasestudy.ui.theme.Blue40
+import com.example.finalscasestudy.ui.theme.SelectedBlue
+import com.example.finalscasestudy.ui.theme.LightGray
 import com.example.finalscasestudy.ui.viewmodel.QuizViewModel
 import com.example.finalscasestudy.ui.viewmodel.UserViewModel
 
@@ -57,13 +60,21 @@ fun QuizAnsweringScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "QuizIT",
+                            text = "VADSAC Academy's QuizIT",
                             fontSize = 25.sp,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 )
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 10.dp), thickness = 5.dp)
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    thickness = 5.dp,
+                    color = Blue40
+                )
             }
         }
     ) { innerPadding ->
@@ -86,7 +97,7 @@ fun QuizAnsweringScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = Blue40)
             }
         } else if (questions.isNotEmpty()) {
             val question = questions[currentIndex]
@@ -104,28 +115,28 @@ fun QuizAnsweringScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
-                        .padding(horizontal = 10.dp, vertical = 15.dp),
+                        .padding(horizontal = 16.dp, vertical = 15.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Card(
-                        modifier = Modifier.height(70.dp),
+                        modifier = Modifier.size(60.dp),
                         shape = CircleShape,
-                        elevation = CardDefaults.cardElevation(5.dp)
+                        elevation = CardDefaults.cardElevation(5.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Blue40
+                        )
                     ) {
-                        Column(
-                            modifier = Modifier.size(60.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .wrapContentSize(Alignment.Center),
                                 text = "${currentIndex + 1}/${questions.size}",
                                 textAlign = TextAlign.Center,
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White
                             )
                         }
                     }
@@ -133,7 +144,8 @@ fun QuizAnsweringScreen(
                     Text(
                         text = "${timer}s",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Light
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -141,21 +153,22 @@ fun QuizAnsweringScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        modifier = Modifier.padding(10.dp),
+                        modifier = Modifier.padding(bottom = 8.dp),
                         text = "Question ${currentIndex + 1}:",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Blue40
                     )
                     Text(
-                        modifier = Modifier.padding(10.dp),
                         text = question.questionText,
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Justify
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Justify,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -163,7 +176,7 @@ fun QuizAnsweringScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
                     itemsIndexed(question.answers) { index, answer ->
                         if (answer != null) {
@@ -176,19 +189,19 @@ fun QuizAnsweringScreen(
                                 shape = RoundedCornerShape(15.dp),
                                 elevation = CardDefaults.cardElevation(5.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = if (isSelected) Color(0xFF90CAF9) else Color(0xFFE0E0E0)
+                                    containerColor = if (isSelected) SelectedBlue else LightGray
                                 )
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(15.dp),
+                                        .padding(16.dp),
                                     contentAlignment = Alignment.CenterStart
                                 ) {
                                     Text(
                                         text = "${'A' + index}. $answer",
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 18.sp,
+                                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                                         color = if (isSelected) Color.White else Color.Black
                                     )
                                 }
@@ -197,25 +210,27 @@ fun QuizAnsweringScreen(
                     }
 
                     // Submit button
-                    items(1) {
+                    item {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(80.dp)
-                                .padding(horizontal = 8.dp, vertical = 10.dp),
+                                .padding(vertical = 16.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.End
                         ) {
                             Button(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(50.dp),
-                                onClick = { quizViewModel.submitCurrentAnswer() } // Pass email when submitting
+                                    .height(56.dp),
+                                onClick = { quizViewModel.submitCurrentAnswer() },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Blue40
+                                )
                             ) {
                                 Text(
                                     text = "Submit",
                                     textAlign = TextAlign.Center,
-                                    fontSize = 20.sp,
+                                    fontSize = 18.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
                             }
