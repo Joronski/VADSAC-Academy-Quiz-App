@@ -8,5 +8,5 @@ data class Quiz(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val category: String,
     val difficulty: String,
-    val questionsJson: String // stores list<QuizQuestion> encoded as JSON
+    val questionsJson: String
 )

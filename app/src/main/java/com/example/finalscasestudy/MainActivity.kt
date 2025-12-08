@@ -22,28 +22,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Build database instance
         val db = DatabaseBuilder.getDatabase(applicationContext)
 
-        // Repositories
         val userRepository = UserRepository(db.userDao())
         val quizRepository = QuizRepository(db.quizDao())
-        val quizAttemptRepository = QuizAttemptRepository(db.quizAttemptDao()) // updated repository
+        val quizAttemptRepository = QuizAttemptRepository(db.quizAttemptDao())
 
         setContent {
             FinalsCaseStudyTheme {
                 val navController = rememberNavController()
 
-                // ViewModels
                 val userViewModel: UserViewModel = viewModel(
                     factory = UserViewModelFactory(userRepository)
                 )
-
                 val quizViewModel: QuizViewModel = viewModel(
-                    factory = QuizViewModelFactory(quizRepository, quizAttemptRepository) // updated
+                    factory = QuizViewModelFactory(quizRepository, quizAttemptRepository)
                 )
 
-                // Navigation Graph
                 AppNavGraph(
                     navController = navController,
                     userViewModel = userViewModel,

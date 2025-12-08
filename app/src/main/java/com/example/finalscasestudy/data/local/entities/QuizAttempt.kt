@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "quiz_attempt_table")
 data class QuizAttempt(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val userEmail: String,  // use email as unique identifier
+    val userEmail: String,
     val category: String,
     val difficulty: String,
     val score: Int,

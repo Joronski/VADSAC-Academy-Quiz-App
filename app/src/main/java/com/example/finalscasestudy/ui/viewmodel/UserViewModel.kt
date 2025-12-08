@@ -9,22 +9,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
-
-    // Current logged-in user
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
 
-    // Login and register results (true = success, false = error, null = no action)
     private val _loginResult = MutableStateFlow<String?>(null)
     val loginResult: StateFlow<String?> = _loginResult
 
     private val _registerResult = MutableStateFlow<String?>(null)
     val registerResult: StateFlow<String?> = _registerResult
 
-    // REGISTER
     fun register(username: String, email: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
-            // Input validation
             when {
                 username.isBlank() -> _registerResult.value = "Username cannot be empty"
                 email.isBlank() -> _registerResult.value = "Email cannot be empty"
@@ -45,14 +40,13 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    // LOGIN
     fun login(email: String, password: String) {
         viewModelScope.launch {
             when {
                 email.isBlank() -> _loginResult.value = "Email cannot be empty"
                 password.isBlank() -> _loginResult.value = "Password cannot be empty"
                 else -> {
-                    val user = repository.loginUser(email.trim(), password)
+                    val user = repository.loginUser(email, password)
                     if (user != null) {
                         _currentUser.value = user
                         _loginResult.value = "SUCCESS"
@@ -64,14 +58,12 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    // LOGOUT
     fun logout() {
         _currentUser.value = null
         _loginResult.value = null
         _registerResult.value = null
     }
 
-    // RESET ERRORS (to be called when navigating to screen)
     fun resetErrors() {
         _loginResult.value = null
         _registerResult.value = null

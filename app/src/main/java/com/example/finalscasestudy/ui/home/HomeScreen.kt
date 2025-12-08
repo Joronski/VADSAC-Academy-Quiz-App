@@ -21,7 +21,6 @@ import com.example.finalscasestudy.ui.viewmodel.UserViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController, userViewModel: UserViewModel) {
-
     val currentUser by userViewModel.currentUser.collectAsState()
 
     Scaffold(
@@ -63,19 +62,20 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel) {
                 text = "Welcome to VADSAC Academy's QuizIT App",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                fontSize = 25.sp,
+                fontSize = 30.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Blue40
             )
 
             Text(
                 modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
-                text = currentUser?.username ?: "Guest",
-                fontSize = 20.sp,
+                text = currentUser?.username ?: "",
+                textAlign = TextAlign.Justify,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            // Navigate to Quiz Category Selection
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -95,7 +95,6 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel) {
                 )
             }
 
-            // Navigate to Quiz Records Screen
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,7 +116,6 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Logout
             OutlinedButton(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -1,6 +1,7 @@
 package com.example.finalscasestudy.ui.quiz
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -31,14 +32,13 @@ fun QuizResultScreen(
     val questions = quizViewModel.questions.collectAsState().value
     val currentUser by userViewModel.currentUser.collectAsState()
 
-    // Calculate results using userAnswers from this quiz only
     val totalQuestions = questions.size
     var correct = 0
     var wrong = 0
     var missed = 0
 
     questions.forEachIndexed { index, question ->
-        when (val answer = quizViewModel.getSelectedAnswerIndexForCurrentQuestionAt(index)) {
+        when (quizViewModel.getSelectedAnswerIndexForCurrentQuestionAt(index)) {
             null -> missed++
             question.correctIndex -> correct++
             else -> wrong++
@@ -47,7 +47,6 @@ fun QuizResultScreen(
 
     val scoreText = "$correct/$totalQuestions"
 
-    // Handle system back press to reset quiz state
     BackHandler {
         quizViewModel.resetQuiz()
         navController.popBackStack()
@@ -89,7 +88,6 @@ fun QuizResultScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Score display
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -109,7 +107,6 @@ fun QuizResultScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Correct / Wrong / Missed
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -122,13 +119,20 @@ fun QuizResultScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Question review list
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(questions.size) { index ->
                     val question = questions[index]
+                    val selected = quizViewModel.getSelectedAnswerIndexForCurrentQuestionAt(index)
+
+                    val borderColor = when {
+                        selected == null -> Color.Gray
+                        selected == question.correctIndex -> Color(0xFF4CAF50)
+                        else -> Color(0xFFF44336)
+                    }
+
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -137,21 +141,22 @@ fun QuizResultScreen(
                         elevation = CardDefaults.cardElevation(5.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        ),
+                        border = BorderStroke(3.dp, borderColor)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
                                 "Q${index + 1}: ${question.questionText}",
-                                fontSize = 18.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 "Correct Answer: ${question.answers[question.correctIndex]}",
-                                fontSize = 16.sp,
+                                fontSize = 18.sp,
                                 color = Blue40,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.SemiBold
                             )
                         }
                     }
@@ -183,7 +188,6 @@ fun QuizResultScreen(
                     }
                 }
 
-                // Go Back Home Button
                 item {
                     OutlinedButton(
                         modifier = Modifier

@@ -12,17 +12,13 @@ class QuizRepository(
     private val quizDao: QuizDao,
     private val gson: Gson = Gson()
 ) {
-
     private val API_KEY = "IpZiC6LJOY11KnWT4zbW1l56hRSupenHDhaX5NX0"
 
     suspend fun getOrCreateQuiz(category: String, difficulty: String): Quiz {
         return withContext(Dispatchers.IO) {
-
-            // Try loading from Room first
             val cachedQuiz = quizDao.getQuiz(category, difficulty)
             if (cachedQuiz != null) return@withContext cachedQuiz
 
-            // Map app difficulty to API expected difficulty
             val apiDifficulty = when (difficulty.lowercase()) {
                 "easy" -> "Easy"
                 "moderate", "medium" -> "Medium"
@@ -30,7 +26,6 @@ class QuizRepository(
                 else -> "Easy"
             }
 
-            // Fetch from API
             val apiQuestions = RetrofitClient.api.getQuestions(
                 apiKey = API_KEY,
                 category = category,
@@ -38,7 +33,6 @@ class QuizRepository(
                 limit = 10
             )
 
-            // Handle empty results
             if (apiQuestions.isEmpty()) {
                 throw Exception("No questions returned by API for $category / $apiDifficulty")
             }

@@ -29,7 +29,6 @@ fun QuizDifficultySelectionScreen(
     val error by quizViewModel.error.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
 
-    // Difficulty options
     val quizzes = listOf(
         Pair("$category Quiz 1", "Easy"),
         Pair("$category Quiz 2", "Medium"),
@@ -88,7 +87,6 @@ fun QuizDifficultySelectionScreen(
                         quizName = quiz.first,
                         difficulty = quiz.second,
                         onClick = {
-                            // Only load quiz if the user is logged in
                             currentUser?.email?.let { email ->
                                 quizViewModel.loadQuiz(category, quiz.second, email)
                                 navController.navigate(NavRoutes.QUIZ_ANSWERING)
@@ -99,7 +97,6 @@ fun QuizDifficultySelectionScreen(
             }
         }
 
-        // Error Dialog
         error?.let { errorMessage ->
             ErrorDialog(
                 message = errorMessage,

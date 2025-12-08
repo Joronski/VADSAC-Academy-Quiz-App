@@ -21,7 +21,6 @@ fun QuizCategorySelectionScreen(
     navController: NavController,
     quizViewModel: QuizViewModel
 ) {
-    // Hardcoded categories, could later come from ViewModel
     val categories = listOf("Linux", "BASH", "SQL", "Docker", "HTML")
 
     Scaffold(

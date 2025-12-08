@@ -5,7 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface QuizApiService {
-
     @GET("questions")
     suspend fun getQuestions(
         @Query("apiKey") apiKey: String,

@@ -21,30 +21,23 @@ fun AppNavGraph(
 ) {
     NavHost(navController = navController, startDestination = NavRoutes.LOGIN) {
 
-        // Login Screen
         composable(NavRoutes.LOGIN) {
             LoginScreen(navController = navController, userViewModel = userViewModel)
         }
-
-        // Register Screen
         composable(NavRoutes.REGISTER) {
             RegisterScreen(navController = navController, userViewModel = userViewModel)
         }
 
-        // Home Screen
         composable(NavRoutes.HOME) {
             HomeScreen(navController = navController, userViewModel = userViewModel)
         }
 
-        // Quiz Category Selection Screen
         composable(NavRoutes.SELECT_QUIZ_CATEGORY) {
             QuizCategorySelectionScreen(
                 navController = navController,
                 quizViewModel = quizViewModel
             )
         }
-
-        // Quiz Difficulty Selection Screen
         composable(
             route = NavRoutes.SELECT_QUIZ_DIFFICULTY,
             arguments = listOf(navArgument("category") { type = NavType.StringType })
@@ -57,17 +50,12 @@ fun AppNavGraph(
                 userViewModel = userViewModel
             )
         }
-
-        // Quiz Answering Screen
         composable(NavRoutes.QUIZ_ANSWERING) {
             QuizAnsweringScreen(
                 navController = navController,
-                quizViewModel = quizViewModel,
-                userViewModel = userViewModel
+                quizViewModel = quizViewModel
             )
         }
-
-        // Quiz Result Screen
         composable(NavRoutes.QUIZ_RESULT) {
             QuizResultScreen(
                 navController = navController,
@@ -75,8 +63,6 @@ fun AppNavGraph(
                 userViewModel = userViewModel
             )
         }
-
-        // Quiz Records Screen
         composable(NavRoutes.QUIZ_RECORDS) {
             QuizRecordsScreen(
                 navController = navController,

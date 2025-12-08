@@ -15,11 +15,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class QuizViewModel(
-    private val repository: QuizRepository,
-    private val attemptRepository: QuizAttemptRepository,
+    private val quizRepository: QuizRepository,
+    private val quizAttemptRepository: QuizAttemptRepository,
     private val gson: Gson = Gson()
-) : ViewModel() {
-
+): ViewModel() {
     private val _quiz = MutableStateFlow<Quiz?>(null)
     val quiz: StateFlow<Quiz?> = _quiz
 
@@ -41,15 +40,11 @@ class QuizViewModel(
     private val userAnswers = mutableMapOf<Int, Int?>()
     private var timerJob: Job? = null
 
-    val allUserAnswers: Map<Int, Int?> get() = userAnswers
-
     private var currentUserEmail: String? = null
 
-    // Quiz Attempts state
     private val _quizAttempts = MutableStateFlow<List<QuizAttempt>>(emptyList())
     val quizAttempts: StateFlow<List<QuizAttempt>> = _quizAttempts
 
-    /** Load a quiz for a user, stores the email internally */
     fun loadQuiz(category: String, difficulty: String, userEmail: String) {
         resetQuiz()
         currentUserEmail = userEmail
@@ -58,12 +53,12 @@ class QuizViewModel(
             try {
                 val apiDifficulty = when (difficulty.lowercase()) {
                     "easy" -> "Easy"
-                    "moderate", "medium" -> "Medium"
+                    "medium" -> "Medium"
                     "hard" -> "Hard"
                     else -> "Easy"
                 }
 
-                val quizEntity = repository.getOrCreateQuiz(category, apiDifficulty)
+                val quizEntity = quizRepository.getOrCreateQuiz(category, apiDifficulty)
                 _quiz.value = quizEntity
 
                 val questionsList =
@@ -103,7 +98,6 @@ class QuizViewModel(
         autoSubmitCurrentAnswer()
     }
 
-    /** Automatically moves to the next question or finalizes the quiz */
     private fun autoSubmitCurrentAnswer() {
         if (_currentIndex.value < _questions.value.size - 1) {
             _currentIndex.value += 1
@@ -113,7 +107,6 @@ class QuizViewModel(
         }
     }
 
-    /** Calculates score and inserts or updates attempt in DB */
     private fun finalizeQuiz(userEmail: String) {
         timerJob?.cancel()
 
@@ -124,7 +117,7 @@ class QuizViewModel(
         var missed = 0
 
         questionsList.forEachIndexed { index, question ->
-            when (val answer = userAnswers[index]) {
+            when (userAnswers[index]) {
                 null -> missed++
                 question.correctIndex -> correct++
                 else -> wrong++
@@ -136,9 +129,9 @@ class QuizViewModel(
         val difficulty = _quiz.value?.difficulty ?: ""
 
         viewModelScope.launch {
-            val existingAttempt = attemptRepository.getAttempt(userEmail, category, difficulty)
+            val existingAttempt = quizAttemptRepository.getAttempt(userEmail, category, difficulty)
             if (existingAttempt != null) {
-                attemptRepository.updateAttempt(
+                quizAttemptRepository.updateAttempt(
                     existingAttempt.copy(
                         score = score,
                         totalQuestions = total,
@@ -148,7 +141,7 @@ class QuizViewModel(
                     )
                 )
             } else {
-                attemptRepository.insertAttempt(
+                quizAttemptRepository.insertAttempt(
                     QuizAttempt(
                         userEmail = userEmail,
                         category = category,
@@ -185,10 +178,9 @@ class QuizViewModel(
 
     fun getSelectedAnswerIndexForCurrentQuestionAt(index: Int): Int? = userAnswers[index]
 
-    /** Load all quiz attempts for the current user */
     fun loadQuizAttempts(userEmail: String) {
         viewModelScope.launch {
-            val attempts = attemptRepository.getAllAttemptsForUser(userEmail)
+            val attempts = quizAttemptRepository.getAllAttemptsForUser(userEmail)
             _quizAttempts.value = attempts
         }
     }

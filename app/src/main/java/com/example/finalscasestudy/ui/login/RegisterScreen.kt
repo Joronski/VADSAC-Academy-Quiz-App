@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
-
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -33,7 +32,6 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Reset errors when entering screen
     LaunchedEffect(Unit) {
         userViewModel.resetErrors()
     }

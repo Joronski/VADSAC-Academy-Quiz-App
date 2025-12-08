@@ -24,13 +24,11 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Reset errors when entering screen
     LaunchedEffect(Unit) {
         userViewModel.resetErrors()
     }

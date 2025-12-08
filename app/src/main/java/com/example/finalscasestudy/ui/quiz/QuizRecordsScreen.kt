@@ -26,7 +26,6 @@ fun QuizRecordsScreen(
     val attempts by quizViewModel.quizAttempts.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
 
-    // Load attempts only for the current logged-in user
     LaunchedEffect(currentUser) {
         currentUser?.email?.let { email ->
             quizViewModel.loadQuizAttempts(email)
@@ -66,7 +65,7 @@ fun QuizRecordsScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Quiz Score History:",
+                text = "Quiz Score History",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Blue40,
@@ -92,6 +91,15 @@ fun QuizRecordsScreen(
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(attempts) { attempt ->
+                        val quizNumber = when (attempt.difficulty.lowercase()) {
+                            "easy" -> 1
+                            "medium" -> 2
+                            "hard" -> 3
+                            else -> 1
+                        }
+
+                        val quizLabel = "${attempt.category} Quiz $quizNumber"
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -122,9 +130,12 @@ fun QuizRecordsScreen(
                                     ) {
                                         Button(
                                             onClick = {
-                                                // Retake quiz using current user email
                                                 currentUser?.email?.let { email ->
-                                                    quizViewModel.loadQuiz(attempt.category, attempt.difficulty, email)
+                                                    quizViewModel.loadQuiz(
+                                                        attempt.category,
+                                                        attempt.difficulty,
+                                                        email
+                                                    )
                                                 }
                                                 navController.navigate("quiz_answering")
                                             },
@@ -136,7 +147,7 @@ fun QuizRecordsScreen(
                                         }
 
                                         Text(
-                                            text = attempt.category,
+                                            text = quizLabel,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.SemiBold,
                                             color = MaterialTheme.colorScheme.onSurface

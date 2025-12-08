@@ -37,7 +37,6 @@ fun QuizCard(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left Column: Quiz Name & Difficulty
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -85,7 +84,6 @@ fun QuizCard(
                 color = Blue40
             )
 
-            // Right Column: Item Count
             Column(
                 modifier = Modifier
                     .fillMaxSize()

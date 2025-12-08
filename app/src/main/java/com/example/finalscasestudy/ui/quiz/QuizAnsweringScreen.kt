@@ -20,34 +20,27 @@ import androidx.navigation.NavController
 import com.example.finalscasestudy.ui.commons.ErrorDialog
 import com.example.finalscasestudy.ui.nav.NavRoutes
 import com.example.finalscasestudy.ui.theme.Blue40
-import com.example.finalscasestudy.ui.theme.SelectedBlue
 import com.example.finalscasestudy.ui.theme.LightGray
 import com.example.finalscasestudy.ui.viewmodel.QuizViewModel
-import com.example.finalscasestudy.ui.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuizAnsweringScreen(
     navController: NavController,
-    quizViewModel: QuizViewModel,
-    userViewModel: UserViewModel
+    quizViewModel: QuizViewModel
 ) {
     val questions by quizViewModel.questions.collectAsState()
     val currentIndex by quizViewModel.currentIndex.collectAsState()
     val timer by quizViewModel.timer.collectAsState()
     val completed by quizViewModel.completed.collectAsState()
     val error by quizViewModel.error.collectAsState()
-    val currentUser by userViewModel.currentUser.collectAsState()
-    val userEmail = currentUser?.email ?: ""
 
-    // Navigate to result screen when quiz is completed
     if (completed) {
         navController.navigate(NavRoutes.QUIZ_RESULT) {
             popUpTo(NavRoutes.QUIZ_ANSWERING) { inclusive = true }
         }
     }
 
-    // Handle system back press to reset quiz
     BackHandler {
         quizViewModel.resetQuiz()
         navController.popBackStack()
@@ -79,7 +72,6 @@ fun QuizAnsweringScreen(
         }
     ) { innerPadding ->
 
-        // Error dialog
         error?.let { errorMessage ->
             ErrorDialog(
                 message = errorMessage,
@@ -110,7 +102,6 @@ fun QuizAnsweringScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Timer and question index
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -149,7 +140,6 @@ fun QuizAnsweringScreen(
                     )
                 }
 
-                // Question text
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,7 +162,6 @@ fun QuizAnsweringScreen(
                     )
                 }
 
-                // Answer options
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -189,7 +178,7 @@ fun QuizAnsweringScreen(
                                 shape = RoundedCornerShape(15.dp),
                                 elevation = CardDefaults.cardElevation(5.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = if (isSelected) SelectedBlue else LightGray
+                                    containerColor = if (isSelected) Blue40 else LightGray
                                 )
                             ) {
                                 Box(
@@ -209,7 +198,6 @@ fun QuizAnsweringScreen(
                         }
                     }
 
-                    // Submit button
                     item {
                         Column(
                             modifier = Modifier
